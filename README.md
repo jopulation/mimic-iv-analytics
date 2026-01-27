@@ -69,16 +69,54 @@
 | ![Top 10 Diagnoses](images/top_10_diagnoses.png) | ![Patient Graph](images/patient_graph_sample.png) |
 | *가장 흔한 질병 상위 10개 분포* | *환자 ID 10014354의 질병 네트워크* |
 
+### 🧹 3차 전처리 결과 (Data Preprocessing)
+* **목표:** 원본 CSV 데이터를 AI 모델(RNN, GNN 등)이 학습할 수 있는 **시퀀스(Sequence) 형태**로 변환
+* **통합 데이터:** `Conditions` (진단) + `Procedures` (시술) + `Drugs` (약물)
+* **결과물:** `data/processed_data.pkl` (Python Pickle Format)
+
+#### 1. 데이터 통계 (Statistics)
+| 구분 (Category) | 고유 코드 수 (Vocab Size) | 설명 |
+| :--- | :--- | :--- |
+| **진단 (Conditions)** | **1,472**개 | ICD 진단 코드 매핑 완료 |
+| **시술 (Procedures)** | **352**개 | 수술 및 처치 코드 매핑 완료 |
+| **약물 (Drugs)** | **631**개 | 처방 약물 이름 매핑 완료 |
+| **총 환자 수** | **100**명 | 환자별 시계열 방문 기록 구축 완료 |
+
+#### 2. 데이터 구조 (Data Structure)
+전처리된 데이터는 환자의 방문 이력을 시간 순서대로 정렬하여 다음과 같은 계층 구조를 가집니다.
+(예시: 환자 ID `10000032`의 첫 번째 방문 기록)
+
+```python
+{
+    10000032: [
+        # 첫 번째 방문 (Visit 1)
+        {
+            'hadm_id': 22259585,
+            'admittime': '2180-05-06 22:23:00',
+            'conditions': [0, 1, 2, 3, 4, 5, 6, 7],  # 8개 진단
+            'procedures': [10],                      # 1개 시술
+            'drugs': [5, 22, 1, 8, ...]              # 14개 약물
+        },
+        # 두 번째 방문 (Visit 2) ...
+    ]
+}
+```
+
 ## 📂 Project Structure
 ```bash
 ├── .venv/                  # Python 가상환경 (Git 업로드 제외됨)
 ├── data/                   # MIMIC-IV 데이터 폴더 (Git 업로드 제외됨)
-│   ├── hosp/               # 병원 일반 기록 (patients.csv, admissions.csv 등)
-│   └── icu/                # 중환자실 기록 (icustays.csv 등)
+│   ├── hosp/               # 병원 일반 기록 (patients.csv 등)
+│   ├── icu/                # 중환자실 기록 (icustays.csv 등)
+│   └── processed_data.pkl  # [New] 전처리 완료된 통합 데이터 (AI 모델 입력용)
 ├── images/                 # README 및 분석 결과 그래프 저장소
 │   ├── mortality_rate.png
-│   └── los_distribution.png
+│   ├── patient_graph_sample.png
+│   └── ...
 ├── notebooks/              # 데이터 분석용 Jupyter Notebooks
-│   └── 01_basic_eda.ipynb  # 기초 EDA: 데이터 로드, 사망률 및 재원 기간(LOS) 분석
+│   ├── 01_basic_eda.ipynb          # 기초 EDA: 데이터 로드 및 분포 확인
+│   ├── 02_diagnosis_analysis.ipynb # 심화 EDA: 진단 코드 분석 및 환자 그래프
+│   ├── 03_preprocessing.ipynb      # [New] 데이터 전처리: 시퀀스 생성 및 매핑
+│   └── 04_pytorch_dataset.ipynb    # [New] 모델링 준비: PyTorch Dataset 구축
 ├── .gitignore              # 데이터 및 가상환경 업로드 방지 설정
 └── README.md               # 프로젝트 가이드 문서
