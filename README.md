@@ -101,6 +101,24 @@
     ]
 }
 ```
+### 🧱 4단계: PyTorch 데이터셋 파이프라인 (Dataset & DataLoader)
+* **목표:** 전처리된 데이터를 딥러닝 모델(RNN, GraphCare 등)의 입력에 맞는 **Tensor 형태**로 변환
+* **핵심 구현:** `MIMICDataset` 클래스 및 `collate_fn` (Batch Processing)
+
+#### 1. 데이터 변환 전략 (Transformation Strategy)
+* **Multi-hot Encoding:** 한 번의 방문에 여러 개의 진단/시술/약물이 존재할 수 있으므로, 해당 코드의 인덱스 위치를 `1`로 마킹하는 방식을 사용했습니다.
+* **Padding & Masking:** 환자마다 방문 횟수(Sequence Length)가 다르므로, 배치 내 최대 길이에 맞춰 `0`으로 패딩(Padding)하고, 유효한 데이터 구간을 알려주는 `Mask`를 생성했습니다.
+
+#### 2. 최종 텐서 형태 (Input Tensor Shapes)
+모델 학습 시 `DataLoader`가 반환하는 텐서의 차원(Dimension)입니다.
+* **Notation:** `B`=Batch Size, `T`=Max Sequence Length (Visits), `V`=Vocab Size
+
+| 입력 텐서 (Tensor Name) | 형태 (Shape) | 설명 |
+| :--- | :--- | :--- |
+| **Diagnosis** | `(B, T, 1,472)` | 진단 코드 입력 (Multi-hot) |
+| **Procedures** | `(B, T, 352)` | 시술 코드 입력 (Multi-hot) |
+| **Medications** | `(B, T, 631)` | 약물 코드 입력 (Multi-hot) |
+| **Mask** | `(B, T)` | 1: 실제 방문 / 0: 패딩 |
 
 ## 📂 Project Structure
 ```bash
