@@ -137,26 +137,48 @@
 ![Training Result](images/training_result_gru.png)
 * *좌측: 학습 손실(Loss) 감소 추이 / 우측: 정확도(Accuracy) 상승 추이*
 
+### 🕸️ 6단계: 의료 지식 그래프 구축 (Knowledge Graph Construction)
+* **목표:** GNN 모델 학습을 위해, 단순 나열된 의료 코드들 사이의 **연관 관계(Co-occurrence)**를 추출하여 그래프 구조로 변환
+* **노드(Nodes):** 진단 + 시술 + 약물 코드 (총 2,400여 개)
+* **엣지(Edges):** 환자의 방문 기록에서 **동시 등장(Co-occurrence)**한 빈도를 기반으로 연결
+* **정제(Filtering):** 노이즈 제거를 위해 연결 강도(Probability)가 **0.05 미만**인 엣지는 제거 (Thresholding)
+
+#### 1. 그래프 통계 (Graph Statistics)
+수십만 개의 잠재적 연결 중, 통계적으로 유의미한 **상위 1%의 핵심 연결**만 추출하여 희소 그래프(Sparse Graph)를 구축했습니다.
+
+| 구분 | 엣지 개수 (Edge Count) | 설명 |
+| :--- | :--- | :--- |
+| **원본 연결 (Raw)** | **429,070**개 | 모든 동시 등장 경우의 수 |
+| **정제된 연결 (Filtered)** | **4,311**개 | Threshold(0.05) 적용 후 핵심 관계 |
+| **희소성 (Sparsity)** | **매우 높음** | 질병 간의 국소적(Local) 클러스터 형성 |
+
+#### 2. 인접 행렬 시각화 (Adjacency Matrix)
+![Graph Structure](images/adjacency_matrix.png)
+* *대각선 주변과 특정 구역에 점들이 뭉쳐있는 것은, 서로 밀접하게 연관된 질병/약물 그룹(Cluster)이 존재함을 의미합니다.*
+
 ## 📂 Project Structure
 ```bash
 ├── .venv/                  # Python 가상환경 (Git 업로드 제외됨)
 ├── data/                   # MIMIC-IV 데이터 폴더 (Git 업로드 제외됨)
+│   ├── graph_data.pkl      # 구축된 지식 그래프 데이터 (Edge Index)
 │   ├── processed_data.pkl  # 전처리 완료된 데이터
-│   ├── ehr_gru_model.pth   # [New] 학습된 GRU 모델 가중치 파일
+│   ├── ehr_gru_model.pth   # 학습된 GRU 모델 가중치 파일
 │   ├── hosp/               # 병원 일반 기록 (patients.csv 등)
 │   ├── icu/                # 중환자실 기록 (icustays.csv 등)
 │   └── processed_data.pkl  # [New] 전처리 완료된 통합 데이터 (AI 모델 입력용)
 ├── images/                 # README 및 분석 결과 그래프 저장소
-│   ├── training_result_gru.png # [New] 학습 Loss/Acc 곡선 그래프
+│   ├── adjacency_matrix.png # [New] 그래프 인접 행렬 시각화
+│   ├── training_result_gru.png # 학습 Loss/Acc 곡선 그래프
 │   ├── mortality_rate.png
 │   ├── patient_graph_sample.png
 │   └── ...
 ├── notebooks/              # 데이터 분석용 Jupyter Notebooks
 │   ├── 01_basic_eda.ipynb          # 기초 EDA: 데이터 로드 및 분포 확인
 │   ├── 02_diagnosis_analysis.ipynb # 심화 EDA: 진단 코드 분석 및 환자 그래프
-│   ├── 03_preprocessing.ipynb      # [New] 데이터 전처리: 시퀀스 생성 및 매핑
-│   ├── 04_pytorch_dataset.ipynb    # [New] 모델링 준비: PyTorch Dataset 구축
-│   └── 05_model_training.ipynb # [New] 모델 학습: GRU Baseline 구현 및 학습
+│   ├── 03_preprocessing.ipynb      # 데이터 전처리: 시퀀스 생성 및 매핑
+│   ├── 04_pytorch_dataset.ipynb    # 모델링 준비: PyTorch Dataset 구축
+│   ├── 05_model_training.ipynb     # 모델 학습: GRU Baseline 구현 및 학습
+│   └── 06_gnn_construction.ipynb   # [New] 그래프 구축: Co-occurrence Matrix 생성
 ├── .gitignore              # 데이터 및 가상환경 업로드 방지 설정
 └── README.md               # 프로젝트 가이드 문서
 ```
