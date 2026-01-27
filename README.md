@@ -27,25 +27,41 @@
 * **Environment:** Jupyter Notebook
 
 ## 📊 Analysis Summary (EDA)
-### 1. 환자 인구 통계 (Demographics)
-* **총 환자 수:** 100명
-* **성별 분포:** (예: 남성 55%, 여성 45% - *본인 분석 결과 입력*)
-* **평균 연령:** (예: 65.4세 - *본인 분석 결과 입력*)
+### 🏥 1차 EDA 결과: 환자 및 입원 현황 분석 (Updated)
+* **데이터셋:** MIMIC-IV Demo v2.2 (hosp module)
+* **분석 대상:** `patients` (환자 정보) + `admissions` (입원 기록)
 
-### 2. 주요 분석 지표
-* **평균 재원 기간 (Avg LOS):** (예: 4.5일)
-* **사망률 (Mortality Rate):** (예: 12%)
-* **가장 빈번한 진단명:** (예: Sepsis, Hypertension...)
+#### 1. 기본 통계 (Statistics)
+* **총 환자 수 (Unique Subjects):** 100명
+* **총 입원 건수 (Total Admissions):** 275건
+* **평균 입원 횟수:** 환자당 약 2.75회
 
-*(이곳에는 분석한 그래프 이미지를 `![image](path/to/image.png)` 형태로 첨부하면 좋습니다)*
+#### 2. 핵심 지표 (Key Metrics)
+| 지표 (Metric) | 결과 값 (Result) | 비고 |
+| :--- | :--- | :--- |
+| **원내 사망률 (Mortality Rate)** | **5.45%** (15/275건) | 전체 입원 건수 대비 사망 비율 |
+| **평균 재원 기간 (Avg LOS)** | **약 9.1일** | 퇴원일(`dischtime`) - 입원일(`admittime`) |
+| **성별 분포** | F (여성), M (남성) | *Notebook 내 그래프 참조* |
+
+#### 3. 발견점 (Insights)
+* **재원 기간(LOS) 분포:** 대부분의 환자가 단기 입원(0~10일)에 집중되어 있으나, 일부 장기 입원 환자가 존재하여 분포가 오른쪽으로 긴 꼬리(Long-tail) 형태를 띔.
+* **사망률:** 데모 데이터의 사망률은 약 5.5%로, 중환자실(ICU) 데이터가 포함된 MIMIC 데이터셋의 특성을 반영함.
+
+### 4. 시각화 결과 (Visualization Results)
+| 원내 사망률 분포 (Mortality Distribution) | 재원 기간 분포 (LOS Distribution) |
+| :---: | :---: |
+| ![Mortality Rate](images/mortality_rate.png) | ![LOS Distribution](images/los_distribution.png) |
+| *생존(0) vs 사망(1) 환자 수 비교* | *환자들의 입원 기간(일) 분포* |
+
+---
 
 ## 📂 Project Structure
 ```bash
-├── data/               # 데이터 폴더 (gitignore 처리됨)
-├── notebooks/          # 분석용 Jupyter Notebooks
-│   ├── 01_data_loading.ipynb
-│   ├── 02_eda_distribution.ipynb
-│   └── 03_preprocessing.ipynb
-├── src/                # 전처리 및 유틸리티 스크립트
-├── README.md           # 프로젝트 설명
-└── requirements.txt    # 필요 라이브러리 목록
+├── .venv/                  # Python 가상환경 (Git 업로드 제외됨)
+├── data/                   # MIMIC-IV 데이터 폴더 (Git 업로드 제외됨)
+│   ├── hosp/               # 병원 일반 기록 (patients.csv, admissions.csv 등)
+│   └── icu/                # 중환자실 기록 (icustays.csv 등)
+├── notebooks/              # 데이터 분석용 Jupyter Notebooks
+│   └── 01_basic_eda.ipynb  # 기초 EDA: 데이터 로드, 사망률 및 재원 기간(LOS) 분석
+├── .gitignore              # 데이터 및 가상환경 업로드 방지 설정
+└── README.md               # 프로젝트 가이드 문서
