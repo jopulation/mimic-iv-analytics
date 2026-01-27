@@ -15,7 +15,7 @@
 4.  **Prediction (Future Work):** 사망률, 재입원, 재원 기간, 약물 추천 예측 모델 구현
 
 ## 📂 Dataset
-본 프로젝트는 [PhysioNet](https://physionet.org/content/mimic-iv-demo/2.2/)의 **MIMIC-IV Clinical Database Demo (v2.2)**를 사용합니다.
+본 프로젝트는 [PhysioNet](https://physionet.org/content/mimic-iv-demo/2.2/)의 MIMIC-IV Clinical Database Demo (v2.2)를 사용합니다.
 * **Subjects:** 100명의 중환자 샘플 데이터
 * **Modules:** `hosp` (병원 일반 기록), `icu` (중환자실 기록)
 * *Note: MIMIC-IV 데이터 사용 승인을 준수하며, 원본 데이터 파일은 저장소에 포함되지 않습니다.*
@@ -56,11 +56,15 @@
 ---
 
 ## 📂 Project Structure
+## 📂 Project Structure
 ```bash
 ├── .venv/                  # Python 가상환경 (Git 업로드 제외됨)
 ├── data/                   # MIMIC-IV 데이터 폴더 (Git 업로드 제외됨)
 │   ├── hosp/               # 병원 일반 기록 (patients.csv, admissions.csv 등)
 │   └── icu/                # 중환자실 기록 (icustays.csv 등)
+├── images/                 # README 및 분석 결과 그래프 저장소
+│   ├── mortality_rate.png
+│   └── los_distribution.png
 ├── notebooks/              # 데이터 분석용 Jupyter Notebooks
 │   └── 01_basic_eda.ipynb  # 기초 EDA: 데이터 로드, 사망률 및 재원 기간(LOS) 분석
 ├── .gitignore              # 데이터 및 가상환경 업로드 방지 설정
