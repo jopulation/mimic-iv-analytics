@@ -53,9 +53,22 @@
 | ![Mortality Rate](images/mortality_rate.png) | ![LOS Distribution](images/los_distribution.png) |
 | *생존(0) vs 사망(1) 환자 수 비교* | *환자들의 입원 기간(일) 분포* |
 
----
+### 🧬 2차 EDA 결과: 진단 분석 및 환자 그래프 (Diagnosis & Patient Graph)
+* **분석 대상:** `diagnoses_icd` (진단 기록) + `d_icd_diagnoses` (코드 사전)
 
-## 📂 Project Structure
+#### 1. 주요 질병 분포 (Top Diagnoses)
+* MIMIC-IV 데모 데이터에서 가장 빈번하게 발생하는 질병 상위 10개를 분석했습니다.
+* **발견점:** 고혈압(Hypertension), 지질대사 장애(Disorders of lipoid metabolism) 등이 상위권을 차지합니다.
+
+#### 2. 환자 개인화 그래프 (Personalized Patient Graph)
+* **GraphCare 논문 구현의 기초:** 특정 환자(Node P)와 그가 진단받은 질병들(Medical Concepts)을 엣지로 연결하여 네트워크를 시각화했습니다.
+* **구조:** `Patient (Red)` ↔ `Diseases (Blue)`
+
+| 상위 10개 진단명 (Top 10 Diagnoses) | 환자 맞춤형 질병 그래프 (Patient Graph) |
+| :---: | :---: |
+| ![Top 10 Diagnoses](images/top_10_diagnoses.png) | ![Patient Graph](images/patient_graph_sample.png) |
+| *가장 흔한 질병 상위 10개 분포* | *환자 ID 10014354의 질병 네트워크* |
+
 ## 📂 Project Structure
 ```bash
 ├── .venv/                  # Python 가상환경 (Git 업로드 제외됨)
