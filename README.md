@@ -156,6 +156,23 @@
 ![Graph Structure](images/adjacency_matrix.png)
 * *대각선 주변과 특정 구역에 점들이 뭉쳐있는 것은, 서로 밀접하게 연관된 질병/약물 그룹(Cluster)이 존재함을 의미합니다.*
 
+### 🧠 7단계: 그래프 기반 예측 모델 (Graph-Enhanced GRU)
+* **목표:** 구축된 의료 지식 그래프(Knowledge Graph)를 활용하여, 단순 시계열 모델(GRU)보다 환자의 상태를 더 깊이 이해하는 모델 구현
+* **모델 구조 (Architecture):** `GCN (Graph Learning)` + `GRU (Sequential Learning)`
+    1. **Graph Convolution:** 환자의 진단/시술/약물 코드를 그래프에 통과시켜, 연관된 질병 정보를 임베딩에 주입 (Information Propagation)
+    2. **GRU:** 그래프로 강화된(Enhanced) 벡터를 시계열로 분석하여 최종 사망률 예측
+
+#### 1. 학습 결과 (Training Results)
+지식 그래프를 활용한 GNN 모델의 학습 곡선입니다.
+![GNN Training Result](images/training_result_gnn.png)
+
+#### 2. 성능 비교 (Performance Comparison)
+| 모델 (Model) | 특징 | Final Loss | Final Accuracy |
+| :--- | :--- | :---: | :---: |
+| **Baseline (GRU)** | 시계열 데이터만 사용 | 0.2512 | 87.00% |
+| **Proposed (GNN)** | **지식 그래프 + 시계열** | **(본인의 결과값)** | **(본인의 결과값)** |
+* *GNN 모델은 질병 간의 상관관계를 학습하여, 데이터가 적거나 복잡한 케이스에서 더 강건한 예측 성능을 기대할 수 있습니다.*
+
 ## 📂 Project Structure
 ```bash
 ├── .venv/                  # Python 가상환경 (Git 업로드 제외됨)
@@ -163,11 +180,13 @@
 │   ├── graph_data.pkl      # 구축된 지식 그래프 데이터 (Edge Index)
 │   ├── processed_data.pkl  # 전처리 완료된 데이터
 │   ├── ehr_gru_model.pth   # 학습된 GRU 모델 가중치 파일
+│   ├── ehr_gnn_model.pth   # [New] GNN 모델 가중치
 │   ├── hosp/               # 병원 일반 기록 (patients.csv 등)
 │   ├── icu/                # 중환자실 기록 (icustays.csv 등)
-│   └── processed_data.pkl  # [New] 전처리 완료된 통합 데이터 (AI 모델 입력용)
+│   └── processed_data.pkl  # 전처리 완료된 통합 데이터 (AI 모델 입력용)
 ├── images/                 # README 및 분석 결과 그래프 저장소
-│   ├── adjacency_matrix.png # [New] 그래프 인접 행렬 시각화
+│   ├── training_result_gnn.png # [New] GNN 모델 결과
+│   ├── adjacency_matrix.png # 그래프 인접 행렬 시각화
 │   ├── training_result_gru.png # 학습 Loss/Acc 곡선 그래프
 │   ├── mortality_rate.png
 │   ├── patient_graph_sample.png
@@ -178,7 +197,8 @@
 │   ├── 03_preprocessing.ipynb      # 데이터 전처리: 시퀀스 생성 및 매핑
 │   ├── 04_pytorch_dataset.ipynb    # 모델링 준비: PyTorch Dataset 구축
 │   ├── 05_model_training.ipynb     # 모델 학습: GRU Baseline 구현 및 학습
-│   └── 06_gnn_construction.ipynb   # [New] 그래프 구축: Co-occurrence Matrix 생성
+│   ├── 06_gnn_construction.ipynb   # 그래프 구축: Co-occurrence Matrix 생성
+│   └── 07_gnn_model.ipynb          # [New] GNN 모델 구현 및 학습
 ├── .gitignore              # 데이터 및 가상환경 업로드 방지 설정
 └── README.md               # 프로젝트 가이드 문서
 ```
