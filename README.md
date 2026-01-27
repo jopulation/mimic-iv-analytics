@@ -27,7 +27,7 @@
 * **Environment:** Jupyter Notebook
 
 ## 📊 Analysis Summary (EDA)
-### 🏥 1차 EDA 결과: 환자 및 입원 현황 분석 (Updated)
+### 🏥 1단계 EDA 결과: 환자 및 입원 현황 분석 (Updated)
 * **데이터셋:** MIMIC-IV Demo v2.2 (hosp module)
 * **분석 대상:** `patients` (환자 정보) + `admissions` (입원 기록)
 
@@ -53,7 +53,7 @@
 | ![Mortality Rate](images/mortality_rate.png) | ![LOS Distribution](images/los_distribution.png) |
 | *생존(0) vs 사망(1) 환자 수 비교* | *환자들의 입원 기간(일) 분포* |
 
-### 🧬 2차 EDA 결과: 진단 분석 및 환자 그래프 (Diagnosis & Patient Graph)
+### 🧬 2단계 EDA 결과: 진단 분석 및 환자 그래프 (Diagnosis & Patient Graph)
 * **분석 대상:** `diagnoses_icd` (진단 기록) + `d_icd_diagnoses` (코드 사전)
 
 #### 1. 주요 질병 분포 (Top Diagnoses)
@@ -69,7 +69,7 @@
 | ![Top 10 Diagnoses](images/top_10_diagnoses.png) | ![Patient Graph](images/patient_graph_sample.png) |
 | *가장 흔한 질병 상위 10개 분포* | *환자 ID 10014354의 질병 네트워크* |
 
-### 🧹 3차 전처리 결과 (Data Preprocessing)
+### 🧹 3단계 전처리 결과 (Data Preprocessing)
 * **목표:** 원본 CSV 데이터를 AI 모델(RNN, GNN 등)이 학습할 수 있는 **시퀀스(Sequence) 형태**로 변환
 * **통합 데이터:** `Conditions` (진단) + `Procedures` (시술) + `Drugs` (약물)
 * **결과물:** `data/processed_data.pkl` (Python Pickle Format)
