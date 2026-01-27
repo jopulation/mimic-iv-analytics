@@ -120,14 +120,34 @@
 | **Medications** | `(B, T, 631)` | 약물 코드 입력 (Multi-hot) |
 | **Mask** | `(B, T)` | 1: 실제 방문 / 0: 패딩 |
 
+### 🧠 5단계: 베이스라인 모델 학습 (Baseline Model: GRU)
+* **목표:** 시계열(Time-series) 의료 데이터를 처리하기 위해 **GRU(Gated Recurrent Unit)** 모델을 구축하고 사망률 예측 성능 검증
+* **입력 데이터:** 진단(Diagnosis), 시술(Procedure), 약물(Medication) 임베딩 벡터의 연결(Concatenation)
+* **학습 설정:** Epochs: 10, Batch Size: 16, Learning Rate: 0.001, Optimizer: Adam
+
+#### 1. 학습 결과 요약 (Training Results)
+10 Epoch 학습 결과, Loss가 안정적으로 감소하며 모델이 정상적으로 패턴을 학습함을 확인했습니다.
+
+| 구분 (Metric) | 초기값 (Epoch 1) | 최종값 (Epoch 10) | 비고 |
+| :--- | :---: | :---: | :--- |
+| **Loss** | 0.6566 | **0.2512** | 📉 61% 감소 (안정적 수렴) |
+| **Accuracy** | 85.00% | **87.00%** | 📈 사망 위험 환자 구분 시작 |
+
+#### 2. 학습 곡선 (Learning Curve)
+![Training Result](images/training_result_gru.png)
+* *좌측: 학습 손실(Loss) 감소 추이 / 우측: 정확도(Accuracy) 상승 추이*
+
 ## 📂 Project Structure
 ```bash
 ├── .venv/                  # Python 가상환경 (Git 업로드 제외됨)
 ├── data/                   # MIMIC-IV 데이터 폴더 (Git 업로드 제외됨)
+│   ├── processed_data.pkl  # 전처리 완료된 데이터
+│   ├── ehr_gru_model.pth   # [New] 학습된 GRU 모델 가중치 파일
 │   ├── hosp/               # 병원 일반 기록 (patients.csv 등)
 │   ├── icu/                # 중환자실 기록 (icustays.csv 등)
 │   └── processed_data.pkl  # [New] 전처리 완료된 통합 데이터 (AI 모델 입력용)
 ├── images/                 # README 및 분석 결과 그래프 저장소
+│   ├── training_result_gru.png # [New] 학습 Loss/Acc 곡선 그래프
 │   ├── mortality_rate.png
 │   ├── patient_graph_sample.png
 │   └── ...
@@ -135,6 +155,8 @@
 │   ├── 01_basic_eda.ipynb          # 기초 EDA: 데이터 로드 및 분포 확인
 │   ├── 02_diagnosis_analysis.ipynb # 심화 EDA: 진단 코드 분석 및 환자 그래프
 │   ├── 03_preprocessing.ipynb      # [New] 데이터 전처리: 시퀀스 생성 및 매핑
-│   └── 04_pytorch_dataset.ipynb    # [New] 모델링 준비: PyTorch Dataset 구축
+│   ├── 04_pytorch_dataset.ipynb    # [New] 모델링 준비: PyTorch Dataset 구축
+│   └── 05_model_training.ipynb # [New] 모델 학습: GRU Baseline 구현 및 학습
 ├── .gitignore              # 데이터 및 가상환경 업로드 방지 설정
 └── README.md               # 프로젝트 가이드 문서
+```
