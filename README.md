@@ -27,6 +27,30 @@
 * **Environment:** Jupyter Notebook
 
 ## 📊 Analysis Summary (EDA)
+### 📋 0단계: 데이터 명세 (Data Specification)
+MIMIC-IV Demo 데이터셋의 파일 구성 및 데이터 규모를 전수 조사한 결과입니다. (Script: `00_data_profiling.ipynb`)
+
+#### 1. HOSP 모듈 (Hospital Wide)
+병원 일반 기록을 포함하며, 총 100명의 환자에 대한 **275건의 입원 기록**과 **10만 건 이상의 검사 기록**이 존재합니다.
+
+| 파일명 (File) | 행(Row) | 열(Col) | 설명 |
+| :--- | :---: | :---: | :--- |
+| **patients** | **100** | 6 | 환자 고유 식별자 및 인구 통계 정보 |
+| **admissions** | 275 | 16 | 병원 입/퇴원 기록 (1인당 평균 2.75회) |
+| **diagnoses_icd** | 4,506 | 5 | ICD 진단 코드 기록 |
+| **labevents** | **107,727** | 16 | 혈액, 소변 등 검사실 검사 결과 |
+| **prescriptions** | 18,087 | 21 | 약물 처방 기록 |
+
+#### 2. ICU 모듈 (Intensive Care Unit)
+중환자실 내의 고해상도 데이터를 포함합니다. 환자 수는 적지만 **활력 징후(Chart Events) 데이터가 약 66만 건**으로 매우 방대합니다.
+
+| 파일명 (File) | 행(Row) | 열(Col) | 설명 |
+| :--- | :---: | :---: | :--- |
+| **icustays** | 140 | 8 | 중환자실 입/퇴실 기록 |
+| **chartevents** | **668,862** | 11 | 활력 징후(맥박, 혈압 등) 및 간호 기록 |
+| **inputevents** | 20,404 | 26 | 수액 및 약물 투여량 (Input) |
+| **outputevents** | 9,362 | 9 | 배설 및 배액량 (Output) |
+
 ### 🏥 1단계 EDA 결과: 환자 및 입원 현황 분석 (Updated)
 * **데이터셋:** MIMIC-IV Demo v2.2 (hosp module)
 * **분석 대상:** `patients` (환자 정보) + `admissions` (입원 기록)
@@ -180,18 +204,19 @@
 │   ├── graph_data.pkl      # 구축된 지식 그래프 데이터 (Edge Index)
 │   ├── processed_data.pkl  # 전처리 완료된 데이터
 │   ├── ehr_gru_model.pth   # 학습된 GRU 모델 가중치 파일
-│   ├── ehr_gnn_model.pth   # [New] GNN 모델 가중치
+│   ├── ehr_gnn_model.pth   # GNN 모델 가중치
 │   ├── hosp/               # 병원 일반 기록 (patients.csv 등)
 │   ├── icu/                # 중환자실 기록 (icustays.csv 등)
 │   └── processed_data.pkl  # 전처리 완료된 통합 데이터 (AI 모델 입력용)
 ├── images/                 # README 및 분석 결과 그래프 저장소
-│   ├── training_result_gnn.png # [New] GNN 모델 결과
+│   ├── training_result_gnn.png # GNN 모델 결과
 │   ├── adjacency_matrix.png # 그래프 인접 행렬 시각화
 │   ├── training_result_gru.png # 학습 Loss/Acc 곡선 그래프
 │   ├── mortality_rate.png
 │   ├── patient_graph_sample.png
 │   └── ...
 ├── notebooks/              # 데이터 분석용 Jupyter Notebooks
+│   ├── 00_data_profiling.ipynb     # [new]
 │   ├── 01_basic_eda.ipynb          # 기초 EDA: 데이터 로드 및 분포 확인
 │   ├── 02_diagnosis_analysis.ipynb # 심화 EDA: 진단 코드 분석 및 환자 그래프
 │   ├── 03_preprocessing.ipynb      # 데이터 전처리: 시퀀스 생성 및 매핑
